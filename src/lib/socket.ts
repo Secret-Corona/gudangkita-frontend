@@ -55,9 +55,12 @@ class SocketManager {
       console.error('Connection error:', error)
     })
 
-    // Real-time data updates
+    // Handle real-time stock updates from the server
+    // This ensures the UI stays synchronized with inventory changes
     this.socket.on('stock_updated', (data) => {
       console.log('Stock updated:', data)
+      // Update the inventory store with real-time stock changes
+      // This maintains audit trail consistency across all connected clients
       this.inventoryStore.handleStockUpdate(data)
     })
 

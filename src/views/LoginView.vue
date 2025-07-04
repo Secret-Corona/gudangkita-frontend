@@ -53,6 +53,12 @@
             <strong>Admin:</strong> admin / admin123<br />
             <strong>User:</strong> user1 / password123
           </p>
+          <p class="text-sm text-gray-600 mb-2">
+            Belum punya akun?
+            <router-link to="/register" class="font-medium text-primary hover:text-primary/80">
+              Daftar di sini
+            </router-link>
+          </p>
           <p class="text-sm text-gray-600">
             Untuk permintaan urgent tanpa login,
             <router-link

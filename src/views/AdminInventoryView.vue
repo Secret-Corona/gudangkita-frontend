@@ -337,6 +337,11 @@ onMounted(() => {
   inventoryStore.fetchItems()
 })
 
+/**
+ * Opens the update stock dialog for a specific inventory item
+ * This function prepares the form with current stock data and shows the dialog
+ * @param item - The inventory item to update
+ */
 function openUpdateDialog(item: InventoryItem) {
   selectedItem.value = item
   updateForm.newStock = item.stok_terkini
@@ -345,6 +350,10 @@ function openUpdateDialog(item: InventoryItem) {
   showUpdateDialog.value = true
 }
 
+/**
+ * Closes the update stock dialog and resets form data
+ * This ensures clean state when dialog is reopened
+ */
 function closeUpdateDialog() {
   showUpdateDialog.value = false
   selectedItem.value = null
@@ -353,6 +362,11 @@ function closeUpdateDialog() {
   updateError.value = ''
 }
 
+/**
+ * Opens the restock dialog for adding new stock to an item
+ * This function initializes the restock form with default values
+ * @param item - The inventory item to restock
+ */
 function openRestockDialog(item: InventoryItem) {
   selectedItem.value = item
   restockForm.quantity = 1
@@ -361,6 +375,10 @@ function openRestockDialog(item: InventoryItem) {
   showRestockDialog.value = true
 }
 
+/**
+ * Closes the restock dialog and resets form data
+ * This ensures clean state when dialog is reopened
+ */
 function closeRestockDialog() {
   showRestockDialog.value = false
   selectedItem.value = null
@@ -379,6 +397,11 @@ function closeAddItemDialog() {
   addItemError.value = ''
 }
 
+/**
+ * Handles the stock update process
+ * This function validates input, calls the API, and updates the UI accordingly
+ * It also creates an audit trail entry for the stock update
+ */
 async function handleUpdateStock() {
   if (!selectedItem.value || updateProcessing.value) return
 
@@ -386,6 +409,8 @@ async function handleUpdateStock() {
   updateError.value = ''
 
   try {
+    // Call inventory store method to update stock
+    // This will also create an audit log entry automatically
     const result = await inventoryStore.updateStock(
       selectedItem.value.id,
       updateForm.newStock,
@@ -405,6 +430,11 @@ async function handleUpdateStock() {
   }
 }
 
+/**
+ * Handles the restock process for adding new inventory
+ * This function validates input, calls the API, and updates the UI accordingly
+ * It also creates an audit trail entry for the restock operation
+ */
 async function handleRestock() {
   if (!selectedItem.value || restockProcessing.value) return
 
@@ -412,6 +442,8 @@ async function handleRestock() {
   restockError.value = ''
 
   try {
+    // Call inventory store method to restock item
+    // This will also create an audit log entry automatically
     const result = await inventoryStore.restockItem(
       selectedItem.value.id,
       restockForm.quantity,

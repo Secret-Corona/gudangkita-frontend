@@ -253,6 +253,14 @@ export const useInventoryStore = defineStore('inventory', () => {
     }
   }
 
+  /**
+   * Updates the stock quantity for a specific inventory item
+   * This function sends a PUT request to update stock and automatically creates an audit log entry
+   * @param itemId - The ID of the item to update
+   * @param newStock - The new stock quantity
+   * @param notes - Optional notes explaining the stock update
+   * @returns Promise with success status and updated item data
+   */
   async function updateStock(itemId: number, newStock: number, notes?: string) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/stock/${itemId}`, {
@@ -264,6 +272,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       const data = await response.json()
 
       if (response.ok) {
+        // Update local state with new item data
         const index = items.value.findIndex(item => item.id === itemId)
         if (index !== -1) {
           items.value[index] = data.item
@@ -281,6 +290,14 @@ export const useInventoryStore = defineStore('inventory', () => {
     }
   }
 
+  /**
+   * Restocks an inventory item by adding the specified quantity to current stock
+   * This function sends a POST request to restock and automatically creates an audit log entry
+   * @param itemId - The ID of the item to restock
+   * @param quantity - The quantity to add to current stock
+   * @param notes - Optional notes explaining the restock operation
+   * @returns Promise with success status and updated item data
+   */
   async function restockItem(itemId: number, quantity: number, notes?: string) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/stock/restock`, {
@@ -292,6 +309,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       const data = await response.json()
 
       if (response.ok) {
+        // Update local state with new item data
         const index = items.value.findIndex(item => item.id === itemId)
         if (index !== -1) {
           items.value[index] = data.item
@@ -379,6 +397,11 @@ export const useInventoryStore = defineStore('inventory', () => {
   }
 
   // Real-time event handlers for Socket.IO
+  /**
+   * Handles real-time stock update events from Socket.IO
+   * This function updates the local inventory state when stock changes occur
+   * @param data - Stock update data containing itemId, newStock, and optional item data
+   */
   function handleStockUpdate(data: { itemId: number; newStock: number; item?: InventoryItem }) {
     // Update the specific item in the items array
     const itemIndex = items.value.findIndex(item => item.id === data.itemId)
@@ -386,7 +409,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       items.value[itemIndex].stok_terkini = data.newStock
       items.value[itemIndex].updated_at = new Date().toISOString()
     } else if (data.item) {
-      // If item not found and full item data provided, add it
+      // If item not found and full item data provided, add it to the inventory
       items.value.push(data.item)
     }
   }

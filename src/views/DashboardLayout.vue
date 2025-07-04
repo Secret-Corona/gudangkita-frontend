@@ -19,8 +19,9 @@
             </router-link>
             <router-link
               v-if="authStore.isUser"
-              to="/request"
+              to="/dashboard/request"
               class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+              :class="{ 'text-primary bg-primary/10': $route.name === 'request-form' }"
             >
               Request Barang
             </router-link>
@@ -77,7 +78,7 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <router-view />
+      <router-view :key="$route.fullPath" />
     </main>
   </div>
 </template>

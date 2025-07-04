@@ -8,7 +8,15 @@
         </p>
       </div>
 
-      <Card>
+      <!-- Loading State -->
+      <div v-if="inventoryStore.loading" class="flex justify-center items-center py-12">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p class="mt-2 text-sm text-gray-500">Loading items...</p>
+        </div>
+      </div>
+
+      <Card v-else>
         <CardHeader>
           <CardTitle>Detail Permintaan</CardTitle>
         </CardHeader>
@@ -162,8 +170,9 @@ watch(
   },
 )
 
-onMounted(() => {
-  inventoryStore.fetchItems()
+onMounted(async () => {
+  // Ensure items are loaded before processing query params
+  await inventoryStore.fetchItems()
 
   // Pre-select item if passed from query
   if (route.query.itemId) {

@@ -339,30 +339,36 @@ function viewRequestDetails(request: StockRequest) {
   showDetailsDialog.value = true
 }
 
-async function handleApprove() {
-  if (!selectedRequest.value || processing.value) return
+/**
+ * Handles the approval or rejection of a stock request
+ * This function updates the request status and creates an audit trail entry
+ * It also updates inventory stock levels when a request is approved
+ */
+async function handleApproval() {
+  if (!selectedRequest.value || approvalProcessing.value) return
 
-  processing.value = true
-  requestError.value = ''
+  approvalProcessing.value = true
+  approvalError.value = ''
 
   try {
+    // Update request status and create audit log entry
+    // This ensures complete traceability of all approval decisions
     const result = await inventoryStore.updateRequestStatus(
       selectedRequest.value.id,
-      'approved',
-      feedback.value || 'Request approved',
+      approvalForm.status,
+      approvalForm.feedback,
     )
 
     if (result.success) {
       closeApprovalDialog()
-      await refreshRequests()
     } else {
-      requestError.value = result.error || 'Failed to approve request'
+      approvalError.value = result.error || 'Failed to update request status'
     }
   } catch (error) {
-    requestError.value = 'An error occurred while processing the request'
+    approvalError.value = 'An error occurred while processing the request'
     console.error('Approval error:', error)
   } finally {
-    processing.value = false
+    approvalProcessing.value = false
   }
 }
 

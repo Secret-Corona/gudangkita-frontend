@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue'),
+    },
+    {
       path: '/public-request',
       name: 'public-request',
       component: () => import('../views/PublicRequestView.vue'),
@@ -36,16 +41,8 @@ const router = createRouter({
           component: () => import('../views/AdminDashboard.vue'),
           meta: { requiresAuth: true, role: 'admin' }
         },
-      ]
-    },
-    {
-      path: '/request',
-      name: 'request',
-      component: () => import('../views/DashboardLayout.vue'),
-      meta: { requiresAuth: true },
-      children: [
         {
-          path: '',
+          path: 'request',
           name: 'request-form',
           component: () => import('../views/RequestFormView.vue'),
           meta: { requiresAuth: true, role: 'user' }

@@ -269,33 +269,50 @@ onMounted(() => {
   fetchTransactions()
 })
 
+/**
+ * Fetches transaction data based on current filter settings
+ * This function applies date and type filters to retrieve relevant audit trail data
+ */
 async function fetchTransactions() {
   loading.value = true
   try {
+    // Fetch transactions with current filter settings
+    // This provides audit trail data for reporting and compliance
     await inventoryStore.fetchTransactions(filters)
   } finally {
     loading.value = false
   }
 }
 
+/**
+ * Downloads transaction report as CSV file
+ * This function generates a comprehensive audit trail report in CSV format
+ * The report includes all transaction details with applied filters
+ */
 async function downloadCSV() {
   loading.value = true
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
     const token = localStorage.getItem('token')
 
+    // Build query parameters for the CSV export
     const params = new URLSearchParams()
     params.append('format', 'csv')
+
+    // Apply date filters if specified
     if (filters.start_date && filters.start_date.trim()) {
       params.append('start_date', filters.start_date)
     }
     if (filters.end_date && filters.end_date.trim()) {
       params.append('end_date', filters.end_date)
     }
+
+    // Apply transaction type filter if specified
     if (filters.type && filters.type.trim()) {
       params.append('type', filters.type)
     }
 
+    // Request CSV export from the API
     const response = await fetch(`${API_BASE_URL}/api/report/transactions?${params}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -303,6 +320,7 @@ async function downloadCSV() {
     })
 
     if (response.ok) {
+      // Create and trigger download of the CSV file
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')

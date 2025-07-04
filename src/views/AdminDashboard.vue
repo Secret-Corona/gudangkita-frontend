@@ -286,8 +286,14 @@ const recentRequests = computed(() =>
     .slice(0, 5),
 )
 
-onMounted(() => {
-  refreshData()
+onMounted(async () => {
+  // Load all necessary data for the admin dashboard
+  // This includes inventory items, requests, and transaction history for audit purposes
+  await Promise.all([
+    inventoryStore.fetchItems(),
+    inventoryStore.fetchRequests(),
+    inventoryStore.fetchTransactions(),
+  ])
 })
 
 async function refreshData() {

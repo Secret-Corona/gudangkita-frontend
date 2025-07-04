@@ -8,7 +8,7 @@
         </p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-        <Button @click="$router.push('/request')"> Buat Permintaan Baru </Button>
+        <Button @click="$router.push('/dashboard/request')"> Buat Permintaan Baru </Button>
       </div>
     </div>
 
@@ -219,7 +219,7 @@ function getStockStatus(item: InventoryItem) {
 function openRequestDialog(item: InventoryItem) {
   // Navigate to request form with pre-selected item
   router.push({
-    name: 'request',
+    name: 'request-form',
     query: { itemId: item.id.toString() },
   })
 }
